@@ -1,0 +1,61 @@
+name: .NET Build with Tests
+
+on:
+  push:
+    branches: [ master ]
+
+## Apparently can't call workflow from matrix :(
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    strategy:
+      matrix:
+        solution: [ 'PathToExile', 'CheatersBeGone', 'KeyOfSpirits', 'StatsCanProveAnything' ]
+      fail-fast: false    # Don't stop on fail (of tests)
+      max-parallel: 1     # Don't run parallel as it will create push conflict
+
+    env:
+      config: 'Release'
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: master   # Make sure latest is used (which is not the case if committing from other job)
+
+    # Setup the .NET environment
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0
+
+    # Install project dependencies
+    - name: Install dependencies
+      run: dotnet restore
+      working-directory: ${{ matrix.solution }}
+      
+    # Build the project
+    - name: Build
+      run: dotnet build --configuration $config --no-restore
+      working-directory: ${{ matrix.solution }}
+      
+    # Run the xUnit tests
+    - name: Run xUnit tests
+      run: dotnet test --no-restore --no-build --configuration $config --logger:"liquid.md;LogFileName=${{github.workspace}}/${{ matrix.solution }}_report.md;Title=Test Report ${{ matrix.solution }};"
+      working-directory: ${{ matrix.solution }}
+      timeout-minutes: 2
+      
+    # All steps after this one will have env variable `USER_REPO_NAME` passed to them.
+    - name: Set User Repo Name Env Var
+      if: always()
+      run: echo "USER_REPO_NAME=$(echo $GITHUB_REPOSITORY | awk -F / '{print $2}')" >> $GITHUB_ENV
+
+    # Store result as an artifact
+    - name: Archive xunit report
+      if: always()
+      uses: actions/upload-artifact@v3
+
+      with:
+        name: xunit-report-${{env.USER_REPO_NAME}}
+        path: ${{github.workspace}}/${{ matrix.solution }}_report.md
