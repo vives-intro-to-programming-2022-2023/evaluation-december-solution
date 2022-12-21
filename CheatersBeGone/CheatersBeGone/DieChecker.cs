@@ -14,12 +14,17 @@ namespace CheatersBeGone
 
 
 
+            // Niet anders dan de som bepalen van alle getallen in de array
+            int sum = 0;
+            foreach (int frequency in frequencyTable)
+            {
+                sum += frequency;
+            }
+            return sum;
 
+            // Of zelfs wat sommigen al kenden
+            //return frequencyTable.Sum();
 
-
-
-            // TODO - Return het resultaat
-            return -1;
         }
 
         public double[] DetermineThrowChances(int[] frequencyTable)
@@ -31,12 +36,20 @@ namespace CheatersBeGone
 
 
 
+            // Hier diende je eerst en vooral een array te maken voor de 
+            // chances te bewaren. Die moet even lang zijn als de frequencyTable
+            double[] throwChances = new double[frequencyTable.Length];
 
+            // Makkelijkste was nu het totaal aantal rolls te bepalen en op te slaan
+            // in een variabel
+            int rolls = CountTotalRolls(frequencyTable);
 
+            // Voor elk experiment bepaal je nu de kans
+            for (int i = 0; i < frequencyTable.Length; i++) {
+                throwChances[i] = 1.0 * frequencyTable[i]/rolls;
+            }
 
-
-            // TODO - Return het resultaat
-            return null;
+            return throwChances;
         }
 
     }

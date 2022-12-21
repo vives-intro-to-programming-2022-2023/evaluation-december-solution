@@ -21,8 +21,12 @@ namespace PathToExile
 
 
 
-            // TODO - Geef de resulterende string terug
-            return null;
+            // Eerst de uitzondering controlleren. In dat geval een lege string terug geven
+            if (path == null || path.Length == 0) return "";
+            
+            // Makkelijkste was hier gewoon de volledige pijl met de spaties errond te replacen
+            // met een komma
+            return path.Replace(" -> ", ",");
         }
 
 
@@ -35,13 +39,29 @@ namespace PathToExile
             // TODO - Uitzonderingen
             // Indien `path` null of leeg is, dien je zelf een lege array terug te geven (niet null)
 
-            
 
 
 
 
-            // TODO - Geef de resulterende array van getallen terug
-            return null;
+
+            // Eerst de uitzondering. Hier diende je wel te weten dat je een array van 0 elementen kan maken.
+            if (path == null || path == "") return new int[0];
+
+            // Stap 1 - Splitsen in strings op basis van de " -> "
+            string[] parts = path.Split(" -> ");
+
+            // Stap 2 - Een array maken voor elk deel dat je nu hebt (bevat telkens een getal als string)
+            int[] numbers = new int[parts.Length];
+
+            // Stap 3 - Elk getal (als string) omzetten naar een integer en op dezelfde index in de numbers array plaatsen.
+            for(int i = 0; i < parts.Length; i++)
+            {
+                numbers[i] = Convert.ToInt32(parts[i]);
+            }
+
+            // Stap 4 - Resultaat terug geven
+            return numbers;
+
         }
 
 

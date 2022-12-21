@@ -23,10 +23,15 @@ public class UnitTestGraph
     [Fact]
     public void TestRepresentValuesAsBarGraphs()
     {
-        int[] values = { 3, 5, 0, 1, 11 };
-        string[] expected = { "***", "*****", "", "*", "***********" };
+        int[] values1 = { 3, 5, 0, 1, 11 };
+        string[] expected1 = { "***", "*****", "", "*", "***********" };
 
-        Assert.Equal(expected, graph.RepresentValuesAsBarGraphs(values, '*'));
+        Assert.Equal(expected1, graph.RepresentValuesAsBarGraphs(values1, '*'));
+
+        int[] values2 = { 1, 2, 3, 4, 5 };
+        string[] expected2 = { "@", "@@", "@@@", "@@@@", "@@@@@" };
+
+        Assert.Equal(expected2, graph.RepresentValuesAsBarGraphs(values2, '@'));
     }
 
     [Fact]

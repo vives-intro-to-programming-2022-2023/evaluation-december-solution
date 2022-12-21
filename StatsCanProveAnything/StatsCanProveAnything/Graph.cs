@@ -54,10 +54,12 @@ namespace StatsCanProveAnything
             }
 
             // xAxis
-            output += StringHelper.GenerateCharacterLine('-', SPACE_PER_BAR * values.Length) + ">";
+            output += offset + StringHelper.GenerateCharacterLine('-', SPACE_PER_BAR * values.Length) + ">";
+                        // TODO - offset was hier vergeten
 
             // xAxis Label
-            output += "\n" + StringHelper.CenterText(xAxisLabel, SPACE_PER_BAR * values.Length);
+            output += "\n" + offset + StringHelper.CenterText(xAxisLabel, SPACE_PER_BAR * values.Length);
+                                // TODO - offset was ook hier vergeten
 
             return output;
         }
@@ -65,7 +67,7 @@ namespace StatsCanProveAnything
         public int MaximumYValue(int[] values)
         {
             if (values == null || values.Length == 0) return 0;
-            return values.Min();
+            return values.Max();        // TODO - Max in plaats van Min
         }
 
         public string[] RepresentValuesAsBarGraphs(int[] values, char character)
@@ -74,7 +76,8 @@ namespace StatsCanProveAnything
 
             for (int i = 0; i < values.Length; i++)
             {
-                bars[i] = StringHelper.GenerateCharacterLine('*', values[i]);
+                // TODO - Hier werd het character argument niet meegegeven
+                bars[i] = StringHelper.GenerateCharacterLine(character, values[i]);
             }
 
             return bars;
